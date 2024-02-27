@@ -5,7 +5,7 @@ use axum::{
 use chrono::{DateTime, Utc};
 use extract::extract;
 use serde::{Deserialize, Serialize};
-use sqlx::PgPool;
+use sqlx::{postgres::PgPoolOptions, PgPool};
 use tokio::net::TcpListener;
 use transaction::transaction;
 
@@ -64,7 +64,10 @@ pub struct AppState {
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let pool = PgPool::connect("postgres://api:123@127.0.0.1:5432/app").await?;
+    let pool = PgPoolOptions::new()
+        .max_connections(12)
+        .connect("postgres://api:123@db:5432/app")
+        .await?;
     let state = AppState { pool };
 
     let app = Router::new()

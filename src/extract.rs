@@ -21,7 +21,7 @@ pub async fn extract(Path(id): Path<u32>, State(state): State<AppState>) -> Resu
         })?;
 
     let transactions = sqlx::query_as::<_, Transaction>(
-        "select * from transaction where client_id = $1 order by created_at limit 10",
+        "select * from transaction where client_id = $1 order by created_at desc limit 10",
     )
     .bind(client.id)
     .fetch_all(&state.pool)
@@ -39,7 +39,7 @@ pub async fn extract(Path(id): Path<u32>, State(state): State<AppState>) -> Resu
                 "saldo": {
                     "total": client.balance,
                     "data_extrato": Utc::now(),
-                    "limit": client.limit
+                    "limite": client.limit
                 },
                 "ultimas_transacoes": transactions
             }

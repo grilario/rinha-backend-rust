@@ -1,0 +1,6 @@
+target
+infra
+.git
+docker-compose.yml
+Dockerfile
+script.sql
